@@ -1,121 +1,87 @@
-const CACHE_NAME = 'digisolution-v1';
-const urlsToCache = [
-  '/',
-  '/modern-website.html',
-  '/manifest.json'
+// =============================================
+//  DigiSolution — Service Worker
+//  Versi: 1.0.0
+// =============================================
+
+const CACHE_NAME     = 'digisolution-v1';
+const OFFLINE_PAGE   = '/offline.html';
+
+// Fail-fail yang akan dicache semasa install
+const ASSETS_TO_CACHE = [
+    '/',
+    '/index.html',
+    '/manifest.json',
+    '/offline.html'
 ];
 
-// Install Service Worker
-self.addEventListener('install', (event) => {
-  console.log('Service Worker: Installing...');
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => {
-        console.log('Service Worker: Caching files');
-        return cache.addAll(urlsToCache);
-      })
-      .then(() => self.skipWaiting())
-  );
-});
-
-// Activate Service Worker
-self.addEventListener('activate', (event) => {
-  console.log('Service Worker: Activating...');
-  event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cache) => {
-          if (cache !== CACHE_NAME) {
-            console.log('Service Worker: Clearing old cache');
-            return caches.delete(cache);
-          }
-        })
-      );
-    })
-  );
-  return self.clients.claim();
-});
-
-// Fetch Event - Cache First Strategy
-self.addEventListener('fetch', (event) => {
-  event.respondWith(
-    caches.match(event.request)
-      .then((response) => {
-        // Return cached version or fetch new
-        return response || fetch(event.request)
-          .then((fetchResponse) => {
-            // Don't cache non-GET requests or external URLs
-            if (event.request.method !== 'GET' || 
-                !event.request.url.startsWith(self.location.origin)) {
-              return fetchResponse;
-            }
-
-            // Clone the response
-            const responseToCache = fetchResponse.clone();
-
-            // Cache the new response
-            caches.open(CACHE_NAME)
-              .then((cache) => {
-                cache.put(event.request, responseToCache);
-              });
-
-            return fetchResponse;
-          })
-          .catch(() => {
-            // If both fail, show offline page
-            return caches.match('/modern-website.html');
-          });
-      })
-  );
-});
-
-// Background Sync (optional)
-self.addEventListener('sync', (event) => {
-  if (event.tag === 'sync-forms') {
-    event.waitUntil(syncForms());
-  }
-});
-
-async function syncForms() {
-  // Sync any pending form submissions when back online
-  console.log('Background sync: Syncing forms');
-}
-
-// Push Notifications (optional)
-self.addEventListener('push', (event) => {
-  const options = {
-    body: event.data ? event.data.text() : 'Notification dari DigiSolution',
-    icon: '/icon-192.png',
-    badge: '/badge-72.png',
-    vibrate: [200, 100, 200],
-    data: {
-      dateOfArrival: Date.now(),
-      primaryKey: 1
-    },
-    actions: [
-      {
-        action: 'explore',
-        title: 'Lihat Sekarang'
-      },
-      {
-        action: 'close',
-        title: 'Tutup'
-      }
-    ]
-  };
-
-  event.waitUntil(
-    self.registration.showNotification('DigiSolution', options)
-  );
-});
-
-// Notification Click
-self.addEventListener('notificationclick', (event) => {
-  event.notification.close();
-
-  if (event.action === 'explore') {
+// =============================================
+//  INSTALL — Cache semua asset penting
+// =============================================
+self.addEventListener('install', event => {
+    console.log('[SW] Installing...');
     event.waitUntil(
-      clients.openWindow('/')
+        caches.open(CACHE_NAME)
+            .then(cache => {
+                console.log('[SW] Caching app shell');
+                return cache.addAll(ASSETS_TO_CACHE);
+            })
+            .then(() => self.skipWaiting()) // Aktif terus tanpa tunggu
     );
-  }
+});
+
+// =============================================
+//  ACTIVATE — Padam cache lama
+// =============================================
+self.addEventListener('activate', event => {
+    console.log('[SW] Activating...');
+    event.waitUntil(
+        caches.keys().then(cacheNames => {
+            return Promise.all(
+                cacheNames
+                    .filter(name => name !== CACHE_NAME)
+                    .map(name => {
+                        console.log('[SW] Deleting old cache:', name);
+                        return caches.delete(name);
+                    })
+            );
+        }).then(() => self.clients.claim()) // Ambil alih semua tab terus
+    );
+});
+
+// =============================================
+//  FETCH — Strategi: Network First, Cache Fallback
+// =============================================
+self.addEventListener('fetch', event => {
+    // Skip request bukan GET
+    if (event.request.method !== 'GET') return;
+
+    // Skip request dari extension / chrome-extension
+    if (!event.request.url.startsWith('http')) return;
+
+    event.respondWith(
+        fetch(event.request)
+            .then(networkResponse => {
+                // Kalau berjaya dari network, update cache
+                if (networkResponse && networkResponse.status === 200) {
+                    const responseClone = networkResponse.clone();
+                    caches.open(CACHE_NAME).then(cache => {
+                        cache.put(event.request, responseClone);
+                    });
+                }
+                return networkResponse;
+            })
+            .catch(() => {
+                // Network gagal — cuba dari cache
+                return caches.match(event.request).then(cachedResponse => {
+                    if (cachedResponse) {
+                        return cachedResponse;
+                    }
+                    // Kalau tiada dalam cache, tunjuk halaman offline
+                    if (event.request.mode === 'navigate') {
+                        return caches.match(OFFLINE_PAGE);
+                    }
+                    return new Response('Offline', { status: 503 });
+                });
+            })
+    );
 });
