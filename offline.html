@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tiada Sambungan — DigiSolution</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+        }
+        .container { max-width: 420px; }
+        .icon { font-size: 5rem; margin-bottom: 1.5rem; animation: bounce 2s infinite; }
+        h1 { font-size: 2rem; font-weight: 800; margin-bottom: 0.8rem; }
+        p { opacity: 0.88; font-size: 1.05rem; line-height: 1.7; margin-bottom: 2rem; }
+        button {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 0.9rem 2.5rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        button:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50%       { transform: translateY(-12px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">📡</div>
+        <h1>Tiada Sambungan Internet</h1>
+        <p>Nampaknya anda sedang offline. Sila semak sambungan internet anda dan cuba semula.</p>
+        <button onclick="window.location.reload()">🔄 Cuba Semula</button>
+    </div>
+</body>
+</html>
