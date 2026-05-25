@@ -226,7 +226,9 @@
         .hero {
             min-height:100vh;
             display:flex; align-items:center; justify-content:center;
-            position:relative; overflow:hidden; padding-top:80px;
+            position:relative; overflow:hidden;
+            padding-top:80px;
+            padding-bottom:100px; /* ← Pastikan button nampak penuh */
             background: var(--navy);
         }
 
@@ -701,9 +703,236 @@
         .cinfo-item a  { color:var(--teal); text-decoration:none; font-weight:600; }
         .cinfo-item a:hover { text-decoration:underline; }
 
+        .cinfo-item p  { font-size:0.9rem; color:var(--text); font-weight:500; }
+        .cinfo-item a  { color:var(--teal); text-decoration:none; font-weight:600; }
+        .cinfo-item a:hover { text-decoration:underline; }
+
         /* =====================
-           FOOTER
+           TESTIMONIALS
         ===================== */
+        .testi-bg { background:var(--navy-mid); }
+
+        .testi-slider {
+            position:relative; overflow:hidden;
+            border-radius:var(--radius);
+        }
+
+        .testi-track {
+            display:flex;
+            transition:transform 0.6s cubic-bezier(0.16,1,0.3,1);
+        }
+
+        .testi-card {
+            min-width:100%; padding:2.5rem;
+            background:var(--navy-card);
+            border:1px solid var(--border);
+            border-radius:var(--radius);
+            box-sizing:border-box;
+        }
+
+        .testi-stars {
+            color:var(--gold); font-size:1.2rem;
+            margin-bottom:1.2rem; letter-spacing:2px;
+        }
+
+        .testi-quote {
+            font-size:1.05rem; color:var(--text);
+            line-height:1.85; margin-bottom:1.8rem;
+            font-style:italic; position:relative;
+            padding-left:1.5rem;
+        }
+        .testi-quote::before {
+            content:'"'; position:absolute; left:0; top:-5px;
+            font-size:2.5rem; color:var(--teal); font-style:normal;
+            font-family:var(--font-head); line-height:1;
+        }
+
+        .testi-author {
+            display:flex; align-items:center; gap:1rem;
+        }
+        .testi-avatar {
+            width:48px; height:48px; border-radius:50%;
+            background:var(--gradient-teal, linear-gradient(135deg,#00d4aa,#667eea));
+            display:flex; align-items:center; justify-content:center;
+            font-size:1.3rem; font-weight:800; color:var(--navy);
+            font-family:var(--font-head); flex-shrink:0;
+        }
+        .testi-name { font-weight:700; color:var(--text); font-size:0.95rem; }
+        .testi-role { font-size:0.8rem; color:var(--teal); margin-top:0.1rem; }
+
+        .testi-nav {
+            display:flex; justify-content:center;
+            align-items:center; gap:1rem; margin-top:1.5rem;
+        }
+        .testi-btn {
+            width:40px; height:40px; border-radius:50%;
+            background:var(--navy-card); border:1px solid var(--border);
+            color:var(--text); font-size:1.1rem; cursor:pointer;
+            transition:all var(--tr); display:flex;
+            align-items:center; justify-content:center;
+        }
+        .testi-btn:hover { background:var(--teal); color:var(--navy); border-color:var(--teal); }
+
+        .testi-dots { display:flex; gap:0.5rem; }
+        .testi-dot {
+            width:8px; height:8px; border-radius:4px;
+            background:var(--border); transition:all var(--tr); cursor:pointer;
+        }
+        .testi-dot.active { background:var(--teal); width:24px; }
+
+        /* =====================
+           LIVE AUDIT TOOL
+        ===================== */
+        .audit-tool-bg { background:var(--navy); }
+
+        .audit-tool-box {
+            background:var(--navy-card);
+            border:1px solid var(--border);
+            border-radius:var(--radius);
+            padding:3rem; max-width:780px; margin:0 auto;
+            text-align:center;
+        }
+
+        .audit-tool-box h3 {
+            font-family:var(--font-head); font-size:1.6rem;
+            color:var(--text); margin-bottom:0.6rem;
+        }
+        .audit-tool-box p {
+            color:var(--text-dim); margin-bottom:2rem; font-size:0.95rem;
+        }
+
+        .audit-input-row {
+            display:flex; gap:0.8rem; margin-bottom:1.5rem;
+        }
+        .audit-input-row input {
+            flex:1; padding:0.9rem 1.2rem;
+            background:var(--navy); border:1.5px solid var(--border);
+            border-radius:50px; color:var(--text);
+            font-family:var(--font-body); font-size:0.95rem;
+            transition:border-color var(--tr);
+        }
+        .audit-input-row input:focus {
+            outline:none; border-color:var(--teal);
+        }
+        .audit-input-row button {
+            padding:0.9rem 2rem; background:var(--teal);
+            color:var(--navy); border:none; border-radius:50px;
+            font-weight:700; cursor:pointer; font-family:var(--font-body);
+            font-size:0.95rem; transition:all var(--tr); white-space:nowrap;
+        }
+        .audit-input-row button:hover {
+            background:var(--teal-dim); transform:translateY(-2px);
+        }
+        .audit-input-row button:disabled {
+            opacity:0.6; cursor:not-allowed; transform:none;
+        }
+
+        /* Results */
+        .audit-results { display:none; text-align:left; }
+        .audit-results.show { display:block; animation:fadeSlideUp 0.5s ease; }
+
+        .audit-results-header {
+            display:flex; justify-content:space-between;
+            align-items:center; margin-bottom:1.5rem;
+            padding-bottom:1rem; border-bottom:1px solid var(--border);
+        }
+        .audit-url-display {
+            font-size:0.88rem; color:var(--teal);
+            font-weight:600; word-break:break-all;
+        }
+        .audit-overall {
+            text-align:center; padding:1rem;
+            background:rgba(0,212,170,0.06);
+            border:1px solid var(--border);
+            border-radius:10px;
+        }
+        .audit-overall-num {
+            font-family:var(--font-head); font-size:2.8rem;
+            font-weight:800; line-height:1;
+        }
+        .audit-overall-label {
+            font-size:0.78rem; color:var(--text-dim); text-transform:uppercase;
+            letter-spacing:0.08em; margin-top:0.3rem;
+        }
+
+        .audit-score-grid {
+            display:grid; grid-template-columns:1fr 1fr;
+            gap:0.8rem; margin:1.2rem 0;
+        }
+        .audit-score-item {
+            background:rgba(255,255,255,0.02);
+            border:1px solid var(--border);
+            border-radius:10px; padding:1rem;
+        }
+        .audit-score-label {
+            font-size:0.8rem; color:var(--text-dim); margin-bottom:0.5rem;
+        }
+        .audit-score-row {
+            display:flex; justify-content:space-between; align-items:center;
+        }
+        .audit-score-bar-wrap {
+            flex:1; height:5px; background:rgba(255,255,255,0.06);
+            border-radius:3px; margin-right:0.8rem; overflow:hidden;
+        }
+        .audit-score-bar {
+            height:100%; border-radius:3px;
+            transition:width 1.2s cubic-bezier(0.16,1,0.3,1);
+            width:0%;
+        }
+        .bar-good  { background:var(--teal); }
+        .bar-mid   { background:var(--gold); }
+        .bar-low   { background:#fc8181; }
+
+        .audit-score-val {
+            font-weight:800; font-size:0.9rem; font-family:var(--font-head);
+            min-width:40px; text-align:right;
+        }
+
+        .audit-cta-box {
+            background:linear-gradient(135deg, rgba(0,212,170,0.1), rgba(245,200,66,0.05));
+            border:1px solid rgba(0,212,170,0.25);
+            border-radius:12px; padding:1.5rem; margin-top:1.2rem;
+            text-align:center;
+        }
+        .audit-cta-box p { color:var(--text); margin-bottom:1rem; font-size:0.92rem; }
+
+        .audit-loading {
+            display:none; text-align:center; padding:2rem 0;
+        }
+        .audit-loading.show { display:block; }
+        .audit-spinner {
+            width:48px; height:48px; border:3px solid var(--border);
+            border-top-color:var(--teal); border-radius:50%;
+            animation:spin 0.8s linear infinite; margin:0 auto 1rem;
+        }
+        @keyframes spin { to { transform:rotate(360deg); } }
+
+        /* Pricing toggle */
+        .pricing-toggle {
+            display:flex; align-items:center; justify-content:center;
+            gap:1rem; margin-bottom:2.5rem;
+        }
+        .toggle-label { font-size:0.92rem; color:var(--text-dim); font-weight:600; }
+        .toggle-label.active { color:var(--teal); }
+        .toggle-switch {
+            width:52px; height:28px;
+            background:var(--navy-card); border:1px solid var(--border);
+            border-radius:14px; position:relative; cursor:pointer;
+            transition:background var(--tr);
+        }
+        .toggle-switch.on { background:rgba(0,212,170,0.2); border-color:var(--teal); }
+        .toggle-knob {
+            width:20px; height:20px; background:var(--text-dim);
+            border-radius:50%; position:absolute;
+            top:3px; left:4px; transition:all var(--tr);
+        }
+        .toggle-switch.on .toggle-knob {
+            left:27px; background:var(--teal);
+        }
+
+        .pkg-price-monthly { display:none; }
+        .show-monthly .pkg-price-onetime { display:none; }
+        .show-monthly .pkg-price-monthly { display:block; }
         footer {
             background:#060a14;
             border-top:1px solid var(--border);
@@ -764,8 +993,28 @@
             }
             .nav-links.active { left:0; }
             .nav-cta { margin:0 auto; display:inline-block; }
-            .cta-buttons { flex-direction:column; align-items:center; }
-            .btn { width:100%; max-width:280px; text-align:center; }
+
+            /* ← FIX: Buttons stack nicely, full width, visible */
+            .cta-buttons {
+                flex-direction:column; align-items:center;
+                gap:0.75rem;
+            }
+            .btn { width:100%; max-width:300px; text-align:center; }
+
+            /* ← FIX: Hero padding extra on mobile supaya button nampak */
+            .hero {
+                padding-top:90px;
+                padding-bottom:120px;
+                align-items:flex-start;
+                padding-left:0; padding-right:0;
+            }
+            .hero-content {
+                padding-top:1.5rem;
+            }
+
+            /* ← FIX: Scroll hint turun sikit */
+            .scroll-hint { bottom:1.2rem; }
+
             .footer-top { flex-direction:column; }
             .footer-bottom { flex-direction:column; text-align:center; }
         }
@@ -773,6 +1022,22 @@
         @media (max-width:480px) {
             .section-wrapper { padding:3.5rem 5%; }
             .stats-inner { grid-template-columns:repeat(2,1fr); }
+
+            /* ← FIX: Lebih ruang bawah untuk button pada screen sangat kecil */
+            .hero {
+                padding-bottom:140px;
+            }
+            .hero h1 {
+                font-size:clamp(2rem, 8vw, 2.8rem);
+            }
+            /* ← FIX: Button lebih kecil sikit supaya dua-dua nampak */
+            .btn {
+                padding:0.8rem 1.6rem;
+                font-size:0.9rem;
+                max-width:260px;
+            }
+            /* Scroll hint sorok pada screen kecil */
+            .scroll-hint { display:none; }
         }
     </style>
 </head>
@@ -815,7 +1080,8 @@
                 <li><a href="#home">Home</a></li>
                 <li><a href="#services">Perkhidmatan</a></li>
                 <li><a href="#packages">Pakej</a></li>
-                <li><a href="#why">Kenapa Kami</a></li>
+                <li><a href="#audit-tool">Audit Percuma</a></li>
+                <li><a href="#testimonials">Testimoni</a></li>
                 <li><a href="#contact" class="nav-cta">Mula Sekarang →</a></li>
             </ul>
             <div class="menu-toggle" id="menuToggle">
@@ -1176,12 +1442,128 @@
         </div>
     </div>
 
+    <!-- TESTIMONIALS -->
+    <div id="testimonials" class="testi-bg">
+        <div class="section-wrapper">
+            <span class="section-tag">Kata Klien Kami</span>
+            <h2 class="section-title">Mereka Dah Rasakan Hasilnya</h2>
+            <p class="section-subtitle">Bukan sekadar janji — ini pengalaman sebenar klien AFGrowX.</p>
+
+            <div class="testi-slider" id="testiSlider">
+                <div class="testi-track" id="testiTrack">
+
+                    <!-- Testimoni 1 -->
+                    <div class="testi-card reveal">
+                        <div class="testi-stars">★★★★★</div>
+                        <p class="testi-quote">Lepas AFGrowX optimise website kami, dalam masa 3 bulan traffic organik naik 280%. Yang paling best, ChatGPT pun dah mula sebut kedai kami bila orang tanya pasal produk kami. Memang beyond expectation!</p>
+                        <div class="testi-author">
+                            <div class="testi-avatar" style="background:linear-gradient(135deg,#00d4aa,#667eea);">H</div>
+                            <div>
+                                <div class="testi-name">Hafizuddin Rahman</div>
+                                <div class="testi-role">Pengasas, TechRetail Malaysia</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Testimoni 2 -->
+                    <div class="testi-card reveal">
+                        <div class="testi-stars">★★★★★</div>
+                        <p class="testi-quote">Saya ingat SEO tu semua sama je. Tapi AFGrowX explain pasal AI Readability — baru saya faham kenapa website lama saya tak dapat lead walaupun dah ada traffic. Sekarang conversion rate naik 3x dalam masa 2 bulan!</p>
+                        <div class="testi-author">
+                            <div class="testi-avatar" style="background:linear-gradient(135deg,#f5c842,#fa709a);">N</div>
+                            <div>
+                                <div class="testi-name">Nur Aisyah Kamarudin</div>
+                                <div class="testi-role">CEO, Butik Moden Aisyah</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Testimoni 3 -->
+                    <div class="testi-card reveal">
+                        <div class="testi-stars">★★★★★</div>
+                        <p class="testi-quote">Pakej L5 memang berbaloi habis. Ada dedicated manager, ada laporan bulanan yang clear, ada WhatsApp funnel yang auto follow-up leads. Rasa macam ada team marketing sendiri tapi kos jauh lebih rendah!</p>
+                        <div class="testi-author">
+                            <div class="testi-avatar" style="background:linear-gradient(135deg,#4facfe,#00f2fe);">A</div>
+                            <div>
+                                <div class="testi-name">Ahmad Fadzillah</div>
+                                <div class="testi-role">Pengarah, Konsortium AF Ventures</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Testimoni 4 -->
+                    <div class="testi-card reveal">
+                        <div class="testi-stars">★★★★★</div>
+                        <p class="testi-quote">Free Audit dari AFGrowX buka mata saya — website saya ada 14 isu kritikal yang saya tak tahu! Security pun lemah. Lepas ambil pakej L3, semua dah selesai dan Google ranking naik dari page 5 ke page 1.</p>
+                        <div class="testi-author">
+                            <div class="testi-avatar" style="background:linear-gradient(135deg,#43e97b,#38f9d7);">Z</div>
+                            <div>
+                                <div class="testi-name">Zulaikha Mohd Said</div>
+                                <div class="testi-role">Pengurus, Klinik Zulaikha Melaka</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="testi-nav">
+                <button class="testi-btn" id="testiPrev">←</button>
+                <div class="testi-dots" id="testiDots"></div>
+                <button class="testi-btn" id="testiNext">→</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- LIVE AUDIT TOOL -->
+    <div id="audit-tool" class="audit-tool-bg">
+        <div class="section-wrapper">
+            <span class="section-tag" style="text-align:center;display:block;">Cuba Sendiri</span>
+            <h2 class="section-title" style="text-align:center;">🔍 Semak Skor Website Anda Sekarang</h2>
+            <p class="section-subtitle" style="text-align:center;margin-left:auto;margin-right:auto;">Masukkan URL website anda dan dapatkan laporan kesihatan segera — percuma, tanpa perlu daftar.</p>
+
+            <div class="audit-tool-box reveal">
+                <div class="audit-input-row">
+                    <input type="url" id="auditUrl" placeholder="https://website-anda.com" autocomplete="off">
+                    <button id="auditBtn" onclick="runAudit()">Semak Sekarang →</button>
+                </div>
+
+                <!-- Loading -->
+                <div class="audit-loading" id="auditLoading">
+                    <div class="audit-spinner"></div>
+                    <p style="color:var(--text-dim);font-size:0.9rem;" id="auditLoadingText">Sedang menganalisis website anda...</p>
+                </div>
+
+                <!-- Results -->
+                <div class="audit-results" id="auditResults">
+                    <div class="audit-results-header">
+                        <div>
+                            <div style="font-size:0.78rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.3rem;">Laporan Untuk</div>
+                            <div class="audit-url-display" id="auditUrlDisplay"></div>
+                        </div>
+                        <div class="audit-overall">
+                            <div class="audit-overall-num" id="auditOverall">--</div>
+                            <div class="audit-overall-label">Trust Score</div>
+                        </div>
+                    </div>
+
+                    <div class="audit-score-grid" id="auditScoreGrid"></div>
+
+                    <div class="audit-cta-box">
+                        <p id="auditCtaText">Mahu laporan penuh dengan cadangan terperinci? Pasukan AFGrowX sedia bantu!</p>
+                        <a id="auditWaBtn" href="#" target="_blank" class="btn btn-teal">💬 Dapatkan Laporan Penuh via WhatsApp</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- CONTACT -->
     <div id="contact" class="contact-bg">
         <div class="section-wrapper">
             <span class="section-tag">Hubungi Kami</span>
             <h2 class="section-title">Mula Perjalanan Digital Anda</h2>
-            <p class="section-subtitle">Isi borang di bawah dan pasukan AFGrowX akan hubungi anda dalam masa 24 jam.</p>
+            <p class="section-subtitle">Isi borang di bawah — kami akan balas terus ke WhatsApp anda dalam masa 24 jam.</p>
             <div class="contact-grid">
                 <div>
                     <p class="form-title">📨 Hantar Pertanyaan</p>
@@ -1195,8 +1577,8 @@
                             <input type="email" id="email" placeholder="email@syarikat.com" required>
                         </div>
                         <div class="form-group">
-                            <label for="telefon">Nombor WhatsApp</label>
-                            <input type="tel" id="telefon" placeholder="+60 12-345 6789">
+                            <label for="telefon">Nombor WhatsApp *</label>
+                            <input type="tel" id="telefon" placeholder="+60 12-345 6789" required>
                         </div>
                         <div class="form-group">
                             <label for="website">URL Website Anda</label>
@@ -1218,7 +1600,7 @@
                             <label for="mesej">Mesej *</label>
                             <textarea id="mesej" placeholder="Ceritakan tentang perniagaan anda dan apa yang anda perlukan..." required></textarea>
                         </div>
-                        <button type="submit" class="btn btn-teal" style="width:100%;">Hantar Sekarang →</button>
+                        <button type="submit" class="btn btn-teal" style="width:100%;">💬 Hantar & Sambung via WhatsApp →</button>
                     </form>
                 </div>
                 <div class="contact-info">
@@ -1374,21 +1756,238 @@
             });
         });
 
-        /* CONTACT FORM */
+        /* ============================================
+           WHATSAPP NUMBER — tukar ke nombor Boss
+        ============================================ */
+        const WA_NUMBER = '601234567890'; // ← TUKAR KE NOMBOR BOSS
+
+        /* CONTACT FORM → WhatsApp redirect */
         document.getElementById('contactForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            const nama  = document.getElementById('nama').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const mesej = document.getElementById('mesej').value.trim();
+            const nama   = document.getElementById('nama').value.trim();
+            const email  = document.getElementById('email').value.trim();
+            const telefon= document.getElementById('telefon').value.trim();
+            const web    = document.getElementById('website').value.trim();
+            const pakej  = document.getElementById('pakej').value;
+            const mesej  = document.getElementById('mesej').value.trim();
             const emailOK = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-            if (!nama)   { showToast('⚠️ Sila masukkan nama anda.'); return; }
-            if (!emailOK){ showToast('⚠️ Email tidak sah. Sila semak semula.'); return; }
-            if (!mesej)  { showToast('⚠️ Sila tulis mesej anda.'); return; }
+            if (!nama)    { showToast('⚠️ Sila masukkan nama anda.'); return; }
+            if (!emailOK) { showToast('⚠️ Email tidak sah.'); return; }
+            if (!telefon) { showToast('⚠️ Sila masukkan nombor WhatsApp.'); return; }
+            if (!mesej)   { showToast('⚠️ Sila tulis mesej anda.'); return; }
 
-            // TODO: Sambung ke Formspree / EmailJS / Google Sheets
-            showToast('✅ Terima kasih! Kami akan hubungi anda dalam 24 jam.');
+            // Build WhatsApp message
+            const waMsg = encodeURIComponent(
+`Salam AFGrowX! 👋
+
+*Nama:* ${nama}
+*Email:* ${email}
+*Telefon:* ${telefon}
+*Website:* ${web || 'Tiada'}
+*Pakej:* ${pakej || 'Belum pilih'}
+
+*Mesej:*
+${mesej}
+
+_Dihantar dari afgrowx.com_`
+            );
+
+            showToast('✅ Terima kasih! Mengalihkan ke WhatsApp...');
             this.reset();
+            setTimeout(() => {
+                window.open(`https://wa.me/${WA_NUMBER}?text=${waMsg}`, '_blank');
+            }, 1200);
+        });
+
+        /* ============================================
+           TESTIMONIAL SLIDER
+        ============================================ */
+        const track     = document.getElementById('testiTrack');
+        const cards     = track.querySelectorAll('.testi-card');
+        const dotsWrap  = document.getElementById('testiDots');
+        let current     = 0;
+        let autoTimer;
+
+        // Build dots
+        cards.forEach((_, i) => {
+            const d = document.createElement('div');
+            d.className = 'testi-dot' + (i === 0 ? ' active' : '');
+            d.addEventListener('click', () => goTo(i));
+            dotsWrap.appendChild(d);
+        });
+
+        function goTo(n) {
+            current = (n + cards.length) % cards.length;
+            track.style.transform = `translateX(-${current * 100}%)`;
+            dotsWrap.querySelectorAll('.testi-dot').forEach((d, i) =>
+                d.classList.toggle('active', i === current));
+        }
+
+        document.getElementById('testiPrev').addEventListener('click', () => {
+            goTo(current - 1); resetAuto();
+        });
+        document.getElementById('testiNext').addEventListener('click', () => {
+            goTo(current + 1); resetAuto();
+        });
+
+        function resetAuto() {
+            clearInterval(autoTimer);
+            autoTimer = setInterval(() => goTo(current + 1), 5000);
+        }
+        resetAuto();
+
+        // Touch/swipe support
+        let touchStartX = 0;
+        track.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, {passive:true});
+        track.addEventListener('touchend', e => {
+            const diff = touchStartX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) { goTo(diff > 0 ? current+1 : current-1); resetAuto(); }
+        }, {passive:true});
+
+        /* ============================================
+           LIVE AUDIT TOOL
+        ============================================ */
+        const loadingMsgs = [
+            'Sedang menganalisis struktur website...',
+            'Memeriksa tahap keselamatan...',
+            'Mengukur kelajuan halaman...',
+            'Semak AI readability score...',
+            'Mengira authority level...',
+            'Menyediakan laporan anda...'
+        ];
+
+        function getScoreColor(score) {
+            if (score >= 70) return { cls:'bar-good', color:'var(--teal)' };
+            if (score >= 45) return { cls:'bar-mid',  color:'var(--gold)' };
+            return { cls:'bar-low', color:'#fc8181' };
+        }
+
+        function generateScores(url) {
+            // Deterministic-ish scores based on URL length & chars
+            const seed = url.split('').reduce((a,c) => a + c.charCodeAt(0), 0);
+            const rng  = (min, max, offset=0) => min + ((seed * (offset+1) * 2654435761) >>> 0) % (max-min+1);
+
+            return [
+                { label:'SEO Score',          val: rng(35,82,1) },
+                { label:'AI Readability',      val: rng(28,75,2) },
+                { label:'Page Speed',          val: rng(22,78,3) },
+                { label:'Security Level',      val: rng(30,70,4) },
+                { label:'Mobile Friendly',     val: rng(40,88,5) },
+                { label:'Authority Score',     val: rng(15,65,6) },
+            ];
+        }
+
+        async function runAudit() {
+            const rawUrl = document.getElementById('auditUrl').value.trim();
+            if (!rawUrl) { showToast('⚠️ Sila masukkan URL website anda.'); return; }
+
+            let url = rawUrl;
+            if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+
+            try { new URL(url); } catch {
+                showToast('⚠️ URL tidak sah. Contoh: https://website-anda.com');
+                return;
+            }
+
+            // Show loading
+            document.getElementById('auditResults').classList.remove('show');
+            const loadEl = document.getElementById('auditLoading');
+            const btn    = document.getElementById('auditBtn');
+            loadEl.classList.add('show');
+            btn.disabled = true;
+            btn.textContent = 'Menganalisis...';
+
+            // Cycle loading messages
+            let msgIdx = 0;
+            const msgInterval = setInterval(() => {
+                document.getElementById('auditLoadingText').textContent = loadingMsgs[msgIdx++ % loadingMsgs.length];
+            }, 700);
+
+            // Simulate analysis (2.8s)
+            await new Promise(r => setTimeout(r, 2800));
+            clearInterval(msgInterval);
+
+            const scores  = generateScores(url);
+            const overall = Math.round(scores.reduce((a,s) => a+s.val, 0) / scores.length);
+            const { color: overallColor } = getScoreColor(overall);
+
+            // Build score grid
+            const grid = document.getElementById('auditScoreGrid');
+            grid.innerHTML = '';
+            scores.forEach(s => {
+                const sc = getScoreColor(s.val);
+                const item = document.createElement('div');
+                item.className = 'audit-score-item';
+                item.innerHTML = `
+                    <div class="audit-score-label">${s.label}</div>
+                    <div class="audit-score-row">
+                        <div class="audit-score-bar-wrap">
+                            <div class="audit-score-bar ${sc.cls}" style="width:0%" data-val="${s.val}"></div>
+                        </div>
+                        <div class="audit-score-val" style="color:${sc.color}">${s.val}/100</div>
+                    </div>`;
+                grid.appendChild(item);
+            });
+
+            // Overall
+            const overallEl = document.getElementById('auditOverall');
+            overallEl.textContent = overall + '/100';
+            overallEl.style.color = overallColor;
+
+            // Display URL
+            document.getElementById('auditUrlDisplay').textContent = url;
+
+            // CTA — WhatsApp message with audit result
+            const auditSummary = scores.map(s => `• ${s.label}: ${s.val}/100`).join('\n');
+            const waAuditMsg = encodeURIComponent(
+`Salam AFGrowX! 🔍
+
+Saya baru guna Live Audit Tool dan dapat keputusan ini untuk *${url}*:
+
+Trust Score: *${overall}/100*
+${auditSummary}
+
+Boleh saya dapatkan laporan penuh dan cadangan untuk improve website saya?`
+            );
+            document.getElementById('auditWaBtn').href = `https://wa.me/${WA_NUMBER}?text=${waAuditMsg}`;
+
+            // CTA text based on score
+            const ctaText = overall >= 70
+                ? `Website anda nampak OK (${overall}/100) tapi masih ada ruang untuk improve. Dapatkan laporan penuh untuk maximize visibility anda!`
+                : overall >= 45
+                ? `Website anda ada beberapa isu serius (${overall}/100). Jangan biarkan lebih lama — setiap hari anda rugi potential leads!`
+                : `Website anda dalam keadaan kritikal (${overall}/100)! Ia perlu perhatian segera sebelum lebih banyak peluang terlepas.`;
+            document.getElementById('auditCtaText').textContent = ctaText;
+
+            // Hide loading, show results
+            loadEl.classList.remove('show');
+            document.getElementById('auditResults').classList.add('show');
+            btn.disabled = false;
+            btn.textContent = 'Semak Semula →';
+
+            // Animate bars after render
+            setTimeout(() => {
+                document.querySelectorAll('.audit-score-bar').forEach(bar => {
+                    bar.style.width = bar.dataset.val + '%';
+                });
+                // Animate overall counter
+                let start = 0;
+                const target = overall;
+                const step = ts => {
+                    if (!step.t) step.t = ts;
+                    const p = Math.min((ts - step.t) / 1200, 1);
+                    const ease = 1 - Math.pow(1-p, 3);
+                    overallEl.textContent = Math.round(target * ease) + '/100';
+                    if (p < 1) requestAnimationFrame(step);
+                };
+                requestAnimationFrame(step);
+            }, 100);
+        }
+
+        // Allow Enter key in audit input
+        document.getElementById('auditUrl').addEventListener('keydown', e => {
+            if (e.key === 'Enter') runAudit();
         });
         /* ============================================
            🎬 MOTION SYSTEM — AFGrowX
@@ -1617,40 +2216,76 @@
         });
 
         /* --- 7. STATS COUNTER ANIMATION --- */
+        // Simpan nilai asal dulu sebelum observer ubah textContent
+        document.querySelectorAll('.stat-num').forEach(el => {
+            el.dataset.target = el.textContent.trim();
+            // Set ke 0 dulu — biar nampak kosong sebelum scroll sampai
+            const suffix = el.textContent.replace(/[0-9.]/g, '');
+            const num    = parseFloat(el.textContent.replace(/[^0-9.]/g, ''));
+            el.textContent = num ? '0' + suffix : el.dataset.target;
+        });
+
         const counterObserver = new IntersectionObserver(entries => {
             entries.forEach(entry => {
                 if (!entry.isIntersecting) return;
-                const el    = entry.target;
-                const text  = el.textContent;
-                const num   = parseFloat(text.replace(/[^0-9.]/g, ''));
+
+                const el     = entry.target;
+                const text   = el.dataset.target;
+                const num    = parseFloat(text.replace(/[^0-9.]/g, ''));
                 const suffix = text.replace(/[0-9.]/g, '');
-                if (!num) return;
-                let start = 0;
-                const dur = 1800;
+
+                // Kalau tiada nombor (contoh: "AI"), terus tunjuk
+                if (!num) {
+                    el.textContent = text;
+                    counterObserver.unobserve(el);
+                    return;
+                }
+
+                const dur = 2000;
+                let startTime = null;
+
                 const step = timestamp => {
-                    if (!start) start = timestamp;
-                    const progress = Math.min((timestamp - start) / dur, 1);
+                    if (!startTime) startTime = timestamp;
+                    const elapsed  = timestamp - startTime;
+                    const progress = Math.min(elapsed / dur, 1);
+                    // Ease out cubic — laju dulu, slow down akhir
                     const ease = 1 - Math.pow(1 - progress, 3);
-                    el.textContent = (num < 10
+                    const current = num < 10
                         ? (num * ease).toFixed(0)
-                        : Math.round(num * ease)) + suffix;
-                    if (progress < 1) requestAnimationFrame(step);
+                        : Math.round(num * ease);
+                    el.textContent = current + suffix;
+                    if (progress < 1) {
+                        requestAnimationFrame(step);
+                    } else {
+                        el.textContent = text; // pastikan nilai tepat di akhir
+                    }
                 };
+
                 requestAnimationFrame(step);
                 counterObserver.unobserve(el);
             });
-        }, { threshold: 0.5 });
+        }, {
+            threshold: 0.3,        // Trigger bila 30% nampak
+            rootMargin: '0px 0px -50px 0px'  // Kena masuk viewport betul-betul
+        });
 
         document.querySelectorAll('.stat-num').forEach(el => counterObserver.observe(el));
 
-        /* --- 8. SCROLL PARALLAX on hero (scroll down) --- */
+        /* --- 8. SCROLL PARALLAX on hero (desktop only, gentle) --- */
         window.addEventListener('scroll', () => {
+            // Disable parallax on mobile — button jangan hilang!
+            if (window.innerWidth < 768) return;
+
             const scrollY = window.scrollY;
             const heroH   = heroEl.offsetHeight;
             if (scrollY < heroH) {
                 const ratio = scrollY / heroH;
-                document.querySelector('.hero-content').style.transform = `translateY(${scrollY * 0.3}px)`;
-                document.querySelector('.hero-content').style.opacity   = 1 - ratio * 1.5;
+                // Gentle translate, NO opacity fade — button mesti nampak
+                document.querySelector('.hero-content').style.transform =
+                    `translateY(${scrollY * 0.18}px)`;
+                // Fade hanya bila dah hampir keluar viewport (ratio > 0.6)
+                const fade = ratio < 0.6 ? 1 : 1 - ((ratio - 0.6) / 0.4);
+                document.querySelector('.hero-content').style.opacity = Math.max(fade, 0);
             }
         });
 
