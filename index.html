@@ -27,6 +27,11 @@
     <meta name="apple-mobile-web-app-title" content="AFGrowX">
     <link rel="manifest" href="manifest.json">
 
+    <!-- Favicon — X kuning, dot hijau -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230a0f1e'/%3E%3Ctext x='30' y='46' font-family='Arial Black,sans-serif' font-size='38' font-weight='900' fill='%23f5c842' text-anchor='middle'%3EX%3C/text%3E%3Ccircle cx='52' cy='14' r='8' fill='%2300d4aa'/%3E%3C/svg%3E">
+    <link rel="shortcut icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230a0f1e'/%3E%3Ctext x='30' y='46' font-family='Arial Black,sans-serif' font-size='38' font-weight='900' fill='%23f5c842' text-anchor='middle'%3EX%3C/text%3E%3Ccircle cx='52' cy='14' r='8' fill='%2300d4aa'/%3E%3C/svg%3E">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='40' fill='%230a0f1e'/%3E%3Ctext x='90' y='135' font-family='Arial Black,sans-serif' font-size='110' font-weight='900' fill='%23f5c842' text-anchor='middle'%3EX%3C/text%3E%3Ccircle cx='158' cy='38' r='26' fill='%2300d4aa'/%3E%3C/svg%3E">
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -438,18 +443,38 @@
         ===================== */
         .services-grid {
             display:grid;
-            grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
-            gap:1.2rem;
+            grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));
+            gap:1.5rem;
         }
 
         .svc-card {
             background:var(--navy-card);
             border:1px solid var(--border);
-            border-radius:var(--radius); padding:1.8rem;
+            border-radius:var(--radius);
+            overflow:hidden;
             transition:all var(--tr);
         }
-        .svc-card:hover { border-color:rgba(0,212,170,0.35); transform:translateY(-4px); }
-        .svc-icon { font-size:2.2rem; margin-bottom:1rem; display:block; }
+        .svc-card:hover { border-color:rgba(0,212,170,0.35); transform:translateY(-5px); box-shadow:var(--glow); }
+
+        /* Image slot — same ratio on all cards */
+        .svc-img-wrap {
+            width:100%;
+            aspect-ratio: 16 / 9;
+            overflow:hidden;
+            background:var(--navy-mid);
+            position:relative;
+        }
+        .svc-img-wrap img {
+            width:100%; height:100%;
+            object-fit:cover;
+            display:block;
+            transition:transform 0.5s ease;
+        }
+        .svc-card:hover .svc-img-wrap img { transform:scale(1.04); }
+
+        /* Card body */
+        .svc-body { padding:1.5rem 1.5rem 1.8rem; }
+        .svc-icon { font-size:2rem; margin-bottom:0.7rem; display:block; }
         .svc-card h3 { font-family:var(--font-head); font-size:1rem; color:var(--text); margin-bottom:0.5rem; }
         .svc-card p  { font-size:0.85rem; color:var(--text-dim); line-height:1.7; }
 
@@ -754,49 +779,94 @@
             <p class="section-subtitle">Penyelesaian lengkap untuk website anda bersaing dalam era AI — bukan setakat Google, tapi ChatGPT, Gemini & lebih.</p>
             <div class="services-grid">
                 <div class="svc-card">
-                    <span class="svc-icon">🔍</span>
-                    <h3>Website Audit</h3>
-                    <p>Analisis menyeluruh prestasi, struktur dan kelemahan website anda secara teknikal.</p>
+                    <div class="svc-img-wrap">
+                        <img src="img/website-audit.jpg" alt="Website Audit" loading="lazy">
+                    </div>
+                    <div class="svc-body">
+                        <span class="svc-icon">🔍</span>
+                        <h3>Website Audit</h3>
+                        <p>Analisis menyeluruh prestasi, struktur dan kelemahan website anda secara teknikal.</p>
+                    </div>
                 </div>
                 <div class="svc-card">
-                    <span class="svc-icon">🛡️</span>
-                    <h3>Security Hardening</h3>
-                    <p>Perkukuh keselamatan website anda dari ancaman siber dan penggodaman.</p>
+                    <div class="svc-img-wrap">
+                        <img src="img/security-hardening.jpg" alt="Security Hardening" loading="lazy">
+                    </div>
+                    <div class="svc-body">
+                        <span class="svc-icon">🛡️</span>
+                        <h3>Security Hardening</h3>
+                        <p>Perkukuh keselamatan website anda dari ancaman siber dan penggodaman.</p>
+                    </div>
                 </div>
                 <div class="svc-card">
-                    <span class="svc-icon">🤖</span>
-                    <h3>AI Readability Audit</h3>
-                    <p>Pastikan AI seperti ChatGPT & Gemini boleh baca dan faham website anda dengan betul.</p>
+                    <div class="svc-img-wrap">
+                        <img src="img/ai-readability-audit.jpg" alt="AI Readability Audit" loading="lazy">
+                    </div>
+                    <div class="svc-body">
+                        <span class="svc-icon">🤖</span>
+                        <h3>AI Readability Audit</h3>
+                        <p>Pastikan AI seperti ChatGPT & Gemini boleh baca dan faham website anda dengan betul.</p>
+                    </div>
                 </div>
                 <div class="svc-card">
-                    <span class="svc-icon">📈</span>
-                    <h3>SEO Optimisation</h3>
-                    <p>Tingkatkan kedudukan website anda dalam carian Google secara organik dan berkesan.</p>
+                    <div class="svc-img-wrap">
+                        <img src="img/seo-optimisation.jpg" alt="SEO Optimisation" loading="lazy">
+                    </div>
+                    <div class="svc-body">
+                        <span class="svc-icon">📈</span>
+                        <h3>SEO Optimisation</h3>
+                        <p>Tingkatkan kedudukan website anda dalam carian Google secara organik dan berkesan.</p>
+                    </div>
                 </div>
                 <div class="svc-card">
-                    <span class="svc-icon">🌐</span>
-                    <h3>GEO / AIO Optimisation</h3>
-                    <p>Generative Engine Optimisation — pastikan bisnes anda muncul dalam jawapan AI.</p>
+                    <div class="svc-img-wrap">
+                        <img src="img/geo-aio-optimisation.jpg" alt="GEO AIO Optimisation" loading="lazy">
+                    </div>
+                    <div class="svc-body">
+                        <span class="svc-icon">🌐</span>
+                        <h3>GEO / AIO Optimisation</h3>
+                        <p>Generative Engine Optimisation — pastikan bisnes anda muncul dalam jawapan AI.</p>
+                    </div>
                 </div>
                 <div class="svc-card">
-                    <span class="svc-icon">💬</span>
-                    <h3>WhatsApp Funnel</h3>
-                    <p>Sistem follow-up automatik yang tukarkan pelawat website kepada pelanggan setia.</p>
+                    <div class="svc-img-wrap">
+                        <img src="img/whatsapp-funnel.jpg" alt="WhatsApp Funnel" loading="lazy">
+                    </div>
+                    <div class="svc-body">
+                        <span class="svc-icon">💬</span>
+                        <h3>WhatsApp Funnel</h3>
+                        <p>Sistem follow-up automatik yang tukarkan pelawat website kepada pelanggan setia.</p>
+                    </div>
                 </div>
                 <div class="svc-card">
-                    <span class="svc-icon">🏆</span>
-                    <h3>Authority Building</h3>
-                    <p>Bina autoriti dan kepercayaan jenama anda di mata Google dan AI.</p>
+                    <div class="svc-img-wrap">
+                        <img src="img/authority-building.jpg" alt="Authority Building" loading="lazy">
+                    </div>
+                    <div class="svc-body">
+                        <span class="svc-icon">🏆</span>
+                        <h3>Authority Building</h3>
+                        <p>Bina autoriti dan kepercayaan jenama anda di mata Google dan AI.</p>
+                    </div>
                 </div>
                 <div class="svc-card">
-                    <span class="svc-icon">📊</span>
-                    <h3>Competitor Analysis</h3>
-                    <p>Ketahui apa yang pesaing anda buat dan strategi untuk mengatasi mereka.</p>
+                    <div class="svc-img-wrap">
+                        <img src="img/competitor-analysis.jpg" alt="Competitor Analysis" loading="lazy">
+                    </div>
+                    <div class="svc-body">
+                        <span class="svc-icon">📊</span>
+                        <h3>Competitor Analysis</h3>
+                        <p>Ketahui apa yang pesaing anda buat dan strategi untuk mengatasi mereka.</p>
+                    </div>
                 </div>
                 <div class="svc-card">
-                    <span class="svc-icon">⚙️</span>
-                    <h3>Monthly Management</h3>
-                    <p>Pengurusan bulanan website anda — update, monitor dan laporan prestasi.</p>
+                    <div class="svc-img-wrap">
+                        <img src="img/monthly-management.jpg" alt="Monthly Management" loading="lazy">
+                    </div>
+                    <div class="svc-body">
+                        <span class="svc-icon">⚙️</span>
+                        <h3>Monthly Management</h3>
+                        <p>Pengurusan bulanan website anda — update, monitor dan laporan prestasi.</p>
+                    </div>
                 </div>
             </div>
         </div>
