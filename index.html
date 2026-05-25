@@ -230,47 +230,79 @@
             background: var(--navy);
         }
 
-        /* Animated grid */
+        /* =====================
+           CUSTOM CURSOR
+        ===================== */
+        .cursor-dot {
+            width:8px; height:8px; background:var(--teal);
+            border-radius:50%; position:fixed; pointer-events:none;
+            z-index:99999; transform:translate(-50%,-50%);
+            transition:transform 0.1s, width 0.2s, height 0.2s, background 0.2s;
+        }
+        .cursor-ring {
+            width:36px; height:36px;
+            border:1.5px solid rgba(0,212,170,0.5);
+            border-radius:50%; position:fixed; pointer-events:none;
+            z-index:99998; transform:translate(-50%,-50%);
+            transition:transform 0.12s ease, width 0.25s, height 0.25s, border-color 0.25s;
+        }
+        .cursor-dot.expand  { width:14px; height:14px; background:var(--gold); }
+        .cursor-ring.expand { width:55px; height:55px; border-color:rgba(245,200,66,0.5); }
+
+        @media (hover:none) {
+            .cursor-dot, .cursor-ring { display:none; }
+        }
+
+        /* =====================
+           PARTICLES CANVAS
+        ===================== */
+        #heroCanvas {
+            position:absolute; inset:0;
+            width:100%; height:100%;
+            pointer-events:none; z-index:0;
+        }
+
+        /* Animated grid — parallax layer */
         .hero-grid {
             position:absolute; inset:0;
             background-image:
-                linear-gradient(rgba(0,212,170,0.06) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0,212,170,0.06) 1px, transparent 1px);
+                linear-gradient(rgba(0,212,170,0.055) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,212,170,0.055) 1px, transparent 1px);
             background-size:60px 60px;
-            animation:gridMove 20s linear infinite;
-        }
-        @keyframes gridMove {
-            0%   { transform:translate(0,0); }
-            100% { transform:translate(60px,60px); }
+            will-change:transform;
+            transition:transform 0.08s linear;
         }
 
-        /* Glow orbs */
+        /* Glow orbs — mouse parallax */
         .hero-orb {
             position:absolute; border-radius:50%;
-            filter:blur(80px); pointer-events:none;
+            filter:blur(90px); pointer-events:none;
+            will-change:transform;
+            transition:transform 0.15s ease-out;
         }
         .hero-orb-1 {
-            width:500px; height:500px;
-            background:radial-gradient(circle, rgba(0,212,170,0.18), transparent 70%);
-            top:-100px; left:-100px;
-            animation:orbFloat 8s ease-in-out infinite;
+            width:600px; height:600px;
+            background:radial-gradient(circle, rgba(0,212,170,0.2), transparent 70%);
+            top:-150px; left:-150px;
         }
         .hero-orb-2 {
-            width:400px; height:400px;
-            background:radial-gradient(circle, rgba(245,200,66,0.1), transparent 70%);
-            bottom:-80px; right:-80px;
-            animation:orbFloat 10s ease-in-out infinite reverse;
+            width:450px; height:450px;
+            background:radial-gradient(circle, rgba(245,200,66,0.12), transparent 70%);
+            bottom:-100px; right:-100px;
         }
-        @keyframes orbFloat {
-            0%,100% { transform:translateY(0) scale(1); }
-            50%      { transform:translateY(-30px) scale(1.05); }
+        .hero-orb-3 {
+            width:300px; height:300px;
+            background:radial-gradient(circle, rgba(102,126,234,0.1), transparent 70%);
+            top:50%; left:50%; transform:translate(-50%,-50%);
         }
 
+        /* Hero content */
         .hero-content {
-            text-align:center; z-index:1;
-            padding:2rem 5%; max-width:900px; margin:0 auto;
+            text-align:center; z-index:2;
+            padding:2rem 5%; max-width:960px; margin:0 auto;
         }
 
+        /* Badge */
         .hero-badge {
             display:inline-flex; align-items:center; gap:0.5rem;
             border:1px solid var(--border);
@@ -278,34 +310,96 @@
             color:var(--teal); padding:0.4rem 1.2rem;
             border-radius:25px; font-size:0.82rem; font-weight:600;
             letter-spacing:0.05em; margin-bottom:2rem;
-            animation:fadeInUp 0.8s ease both;
+            opacity:0; transform:translateY(20px);
         }
+        .hero-badge.animate-in { animation:fadeSlideUp 0.7s ease forwards; }
         .hero-badge::before { content:'●'; font-size:0.5rem; animation:blink 1.5s infinite; }
         @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
+        /* H1 — split word animation */
         .hero h1 {
             font-family:var(--font-head);
             font-size:clamp(2.4rem, 5.5vw, 4.2rem);
             font-weight:800; line-height:1.1;
             letter-spacing:-0.03em; margin-bottom:1.5rem;
-            animation:fadeInUp 0.8s ease 0.15s both;
         }
-
         .hero h1 .accent { color:var(--teal); }
         .hero h1 .gold   { color:var(--gold); }
 
+        /* Each word wrapped by JS */
+        .word-wrap { overflow:hidden; display:inline-block; }
+        .word-inner {
+            display:inline-block;
+            transform:translateY(110%);
+            transition:transform 0.7s cubic-bezier(0.16,1,0.3,1);
+        }
+        .word-inner.revealed { transform:translateY(0); }
+
+        /* Accent words — glow pulse after reveal */
+        .accent .word-inner.revealed,
+        .gold .word-inner.revealed {
+            animation: none;
+        }
+        .accent-glow {
+            animation: accentPulse 3s ease-in-out infinite 1s !important;
+        }
+        @keyframes accentPulse {
+            0%,100% { text-shadow: 0 0 0px transparent; }
+            50%      { text-shadow: 0 0 30px rgba(0,212,170,0.5); }
+        }
+        .gold-glow {
+            animation: goldPulse 3s ease-in-out infinite 1.2s !important;
+        }
+        @keyframes goldPulse {
+            0%,100% { text-shadow: 0 0 0px transparent; }
+            50%      { text-shadow: 0 0 35px rgba(245,200,66,0.5); }
+        }
+
+        /* Tagline — char by char */
         .hero-tagline {
             font-size:clamp(1rem, 2vw, 1.2rem);
             color:var(--text-dim); margin-bottom:2.5rem;
             max-width:620px; margin-left:auto; margin-right:auto;
-            line-height:1.8;
-            animation:fadeInUp 0.8s ease 0.3s both;
+            line-height:1.8; opacity:0; transform:translateY(18px);
         }
+        .hero-tagline.animate-in { animation:fadeSlideUp 0.8s ease 0.05s forwards; }
 
         .cta-buttons {
             display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;
-            animation:fadeInUp 0.8s ease 0.45s both;
+            opacity:0; transform:translateY(18px);
         }
+        .cta-buttons.animate-in { animation:fadeSlideUp 0.8s ease 0.1s forwards; }
+
+        @keyframes fadeSlideUp {
+            from { opacity:0; transform:translateY(18px); }
+            to   { opacity:1; transform:translateY(0); }
+        }
+
+        /* Scroll indicator */
+        .scroll-hint {
+            position:absolute; bottom:2rem; left:50%;
+            transform:translateX(-50%);
+            display:flex; flex-direction:column; align-items:center;
+            gap:0.5rem; color:var(--text-dim); font-size:0.75rem;
+            letter-spacing:0.1em; text-transform:uppercase; z-index:2;
+            opacity:0; animation:fadeSlideUp 1s ease 2.5s forwards;
+        }
+        .scroll-line {
+            width:1px; height:50px;
+            background:linear-gradient(to bottom, transparent, var(--teal));
+            animation:scrollPulse 1.8s ease-in-out infinite;
+        }
+        @keyframes scrollPulse {
+            0%,100% { transform:scaleY(0); transform-origin:top; }
+            50%      { transform:scaleY(1); transform-origin:top; }
+        }
+
+        /* Section reveal on scroll */
+        .reveal {
+            opacity:0; transform:translateY(35px);
+            transition:opacity 0.75s ease, transform 0.75s cubic-bezier(0.16,1,0.3,1);
+        }
+        .reveal.visible { opacity:1; transform:translateY(0); }
 
         .btn {
             padding:0.9rem 2.2rem; border:none; border-radius:50px;
@@ -684,6 +778,10 @@
 </head>
 <body>
 
+    <!-- Custom Cursor -->
+    <div class="cursor-dot"  id="cursorDot"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+
     <div class="toast" id="toast"></div>
     <div class="connection-status" id="connectionStatus"></div>
 
@@ -728,24 +826,30 @@
 
     <!-- HERO -->
     <div id="home" class="hero">
-        <div class="hero-grid"></div>
-        <div class="hero-orb hero-orb-1"></div>
-        <div class="hero-orb hero-orb-2"></div>
+        <canvas id="heroCanvas"></canvas>
+        <div class="hero-grid" id="heroGrid"></div>
+        <div class="hero-orb hero-orb-1" id="heroOrb1"></div>
+        <div class="hero-orb hero-orb-2" id="heroOrb2"></div>
+        <div class="hero-orb hero-orb-3" id="heroOrb3"></div>
         <div class="hero-content">
-            <div class="hero-badge">AI-First Website Positioning</div>
-            <h1>
+            <div class="hero-badge" id="heroBadge">AI-First Website Positioning</div>
+            <h1 id="heroH1">
                 Buat Website Anda<br>
                 <span class="accent">Visible</span>, <span class="accent">Trusted</span><br>
                 & <span class="gold">Discoverable</span>
             </h1>
-            <p class="hero-tagline">
+            <p class="hero-tagline" id="heroTagline">
                 Dalam era AI, Google bukan satu-satunya yang menilai website anda.<br>
                 AFGrowX membantu perniagaan anda menjadi lebih dikenali — oleh manusia <em>dan</em> AI.
             </p>
-            <div class="cta-buttons">
+            <div class="cta-buttons" id="heroCtaBtns">
                 <a href="#packages" class="btn btn-teal">Lihat Pakej Kami</a>
                 <a href="#contact" class="btn btn-outline">Minta Audit Percuma</a>
             </div>
+        </div>
+        <div class="scroll-hint">
+            <span>Scroll</span>
+            <div class="scroll-line"></div>
         </div>
     </div>
 
@@ -1286,6 +1390,270 @@
             showToast('✅ Terima kasih! Kami akan hubungi anda dalam 24 jam.');
             this.reset();
         });
+        /* ============================================
+           🎬 MOTION SYSTEM — AFGrowX
+        ============================================ */
+
+        /* --- 1. CUSTOM CURSOR --- */
+        const dot  = document.getElementById('cursorDot');
+        const ring = document.getElementById('cursorRing');
+        let mx = 0, my = 0, rx = 0, ry = 0;
+
+        document.addEventListener('mousemove', e => {
+            mx = e.clientX; my = e.clientY;
+            dot.style.left  = mx + 'px';
+            dot.style.top   = my + 'px';
+        });
+
+        // Ring follows with lag
+        (function animateRing() {
+            rx += (mx - rx) * 0.12;
+            ry += (my - ry) * 0.12;
+            ring.style.left = rx + 'px';
+            ring.style.top  = ry + 'px';
+            requestAnimationFrame(animateRing);
+        })();
+
+        // Expand on hover
+        document.querySelectorAll('a, button, .svc-card, .pkg-card').forEach(el => {
+            el.addEventListener('mouseenter', () => { dot.classList.add('expand'); ring.classList.add('expand'); });
+            el.addEventListener('mouseleave', () => { dot.classList.remove('expand'); ring.classList.remove('expand'); });
+        });
+
+        /* --- 2. FLOATING PARTICLES CANVAS --- */
+        const canvas = document.getElementById('heroCanvas');
+        const ctx    = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width  = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        class Particle {
+            constructor() { this.reset(); }
+            reset() {
+                this.x    = Math.random() * canvas.width;
+                this.y    = Math.random() * canvas.height;
+                this.size = Math.random() * 1.8 + 0.4;
+                this.speedX = (Math.random() - 0.5) * 0.4;
+                this.speedY = (Math.random() - 0.5) * 0.4 - 0.2;
+                this.opacity = Math.random() * 0.5 + 0.1;
+                this.color = Math.random() > 0.7
+                    ? `rgba(245,200,66,${this.opacity})`
+                    : `rgba(0,212,170,${this.opacity})`;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.y < -10 || this.x < -10 || this.x > canvas.width+10) this.reset();
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < 90; i++) particles.push(new Particle());
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+
+            // Connect nearby particles
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i+1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx*dx + dy*dy);
+                    if (dist < 90) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = `rgba(0,212,170,${0.08 * (1 - dist/90)})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        /* --- 3. MOUSE PARALLAX (orbs + grid) --- */
+        const heroEl  = document.getElementById('home');
+        const orb1    = document.getElementById('heroOrb1');
+        const orb2    = document.getElementById('heroOrb2');
+        const orb3    = document.getElementById('heroOrb3');
+        const grid    = document.getElementById('heroGrid');
+
+        let targetX = 0, targetY = 0;
+        let currentX = 0, currentY = 0;
+
+        document.addEventListener('mousemove', e => {
+            const rect = heroEl.getBoundingClientRect();
+            if (e.clientY > rect.bottom) return;
+            targetX = (e.clientX / window.innerWidth  - 0.5) * 2;
+            targetY = (e.clientY / window.innerHeight - 0.5) * 2;
+        });
+
+        (function animateParallax() {
+            currentX += (targetX - currentX) * 0.05;
+            currentY += (targetY - currentY) * 0.05;
+
+            // Different depths
+            orb1.style.transform = `translate(${currentX * 35}px, ${currentY * 35}px)`;
+            orb2.style.transform = `translate(${currentX * -25}px, ${currentY * -25}px)`;
+            orb3.style.transform = `translate(${-50 + currentX * 15}%, ${-50 + currentY * 15}%)`;
+            grid.style.transform = `translate(${currentX * 12}px, ${currentY * 12}px)`;
+
+            requestAnimationFrame(animateParallax);
+        })();
+
+        /* --- 4. HERO TEXT — WORD REVEAL --- */
+        function wrapWords(el) {
+            // Walk through childNodes to preserve spans (accent/gold)
+            const nodes = Array.from(el.childNodes);
+            el.innerHTML = '';
+            nodes.forEach(node => {
+                if (node.nodeType === Node.TEXT_NODE) {
+                    const words = node.textContent.split(/(\s+)/);
+                    words.forEach(w => {
+                        if (/^\s+$/.test(w)) {
+                            el.appendChild(document.createTextNode(w));
+                        } else if (w) {
+                            const wrap  = document.createElement('span');
+                            wrap.className = 'word-wrap';
+                            const inner = document.createElement('span');
+                            inner.className = 'word-inner';
+                            inner.textContent = w;
+                            wrap.appendChild(inner);
+                            el.appendChild(wrap);
+                        }
+                    });
+                } else if (node.nodeType === Node.ELEMENT_NODE) {
+                    // Span like .accent or .gold — wrap words inside
+                    const cloneSpan = node.cloneNode(false);
+                    const innerWords = node.textContent.split(/(\s+)/);
+                    innerWords.forEach(w => {
+                        if (/^\s+$/.test(w)) {
+                            cloneSpan.appendChild(document.createTextNode(w));
+                        } else if (w) {
+                            const wrap  = document.createElement('span');
+                            wrap.className = 'word-wrap';
+                            const inner = document.createElement('span');
+                            inner.className = 'word-inner';
+                            inner.textContent = w;
+                            wrap.appendChild(inner);
+                            cloneSpan.appendChild(wrap);
+                        }
+                    });
+                    el.appendChild(cloneSpan);
+                } else {
+                    el.appendChild(node.cloneNode(true));
+                }
+            });
+        }
+
+        function revealWords(el, startDelay) {
+            const inners = el.querySelectorAll('.word-inner');
+            inners.forEach((inner, i) => {
+                setTimeout(() => {
+                    inner.classList.add('revealed');
+                    // Add glow to accent/gold words
+                    const parent = inner.closest('.accent');
+                    const parentGold = inner.closest('.gold');
+                    if (parent)     setTimeout(() => inner.classList.add('accent-glow'), 400);
+                    if (parentGold) setTimeout(() => inner.classList.add('gold-glow'), 400);
+                }, startDelay + i * 80);
+            });
+        }
+
+        /* --- 5. ORCHESTRATED HERO ENTRANCE --- */
+        window.addEventListener('load', () => {
+            // Badge
+            setTimeout(() => {
+                document.getElementById('heroBadge').classList.add('animate-in');
+            }, 200);
+
+            // H1 word reveal
+            const h1 = document.getElementById('heroH1');
+            wrapWords(h1);
+            setTimeout(() => revealWords(h1, 0), 700);
+
+            // Tagline
+            setTimeout(() => {
+                document.getElementById('heroTagline').classList.add('animate-in');
+            }, 1600);
+
+            // CTA buttons
+            setTimeout(() => {
+                document.getElementById('heroCtaBtns').classList.add('animate-in');
+            }, 1900);
+        });
+
+        /* --- 6. SCROLL REVEAL (all sections) --- */
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry, i) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('visible');
+                    }, i * 60);
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        // Apply reveal class to section children
+        document.querySelectorAll(
+            '.svc-card, .pkg-card, .why-point, .stat-item, .cinfo-item, .audit-item, .gallery-item'
+        ).forEach(el => {
+            el.classList.add('reveal');
+            revealObserver.observe(el);
+        });
+
+        /* --- 7. STATS COUNTER ANIMATION --- */
+        const counterObserver = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                const el    = entry.target;
+                const text  = el.textContent;
+                const num   = parseFloat(text.replace(/[^0-9.]/g, ''));
+                const suffix = text.replace(/[0-9.]/g, '');
+                if (!num) return;
+                let start = 0;
+                const dur = 1800;
+                const step = timestamp => {
+                    if (!start) start = timestamp;
+                    const progress = Math.min((timestamp - start) / dur, 1);
+                    const ease = 1 - Math.pow(1 - progress, 3);
+                    el.textContent = (num < 10
+                        ? (num * ease).toFixed(0)
+                        : Math.round(num * ease)) + suffix;
+                    if (progress < 1) requestAnimationFrame(step);
+                };
+                requestAnimationFrame(step);
+                counterObserver.unobserve(el);
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('.stat-num').forEach(el => counterObserver.observe(el));
+
+        /* --- 8. SCROLL PARALLAX on hero (scroll down) --- */
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+            const heroH   = heroEl.offsetHeight;
+            if (scrollY < heroH) {
+                const ratio = scrollY / heroH;
+                document.querySelector('.hero-content').style.transform = `translateY(${scrollY * 0.3}px)`;
+                document.querySelector('.hero-content').style.opacity   = 1 - ratio * 1.5;
+            }
+        });
+
     </script>
 </body>
 </html>
